@@ -27,6 +27,9 @@ namespace IdnoPlugins\Buffer\Pages {
 			    
 			    $user = \Idno\Core\site()->session()->currentUser();
 			    $user->buffer = ['access_token' => $response->access_token];
+			    
+			    // Get profiles
+			    $user->buffer['profile_ids'] = $bufferAPI->getProfileIDs();
 
 			    $user->save();
 			    \Idno\Core\site()->session()->addMessage('Your Buffer account was connected.');
