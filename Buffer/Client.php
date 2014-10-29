@@ -7,6 +7,8 @@ namespace IdnoPlugins\Buffer {
 	private $key;
 	private $secret;
 	
+	public $access_token;
+	
 	function __construct($apikey, $secret) {
 	    $this->key = $apikey;
 	    $this->secret = $secret;
@@ -40,6 +42,34 @@ namespace IdnoPlugins\Buffer {
 	    	    
 	    return \Idno\Core\Webservice::post(\IdnoPlugins\Buffer\Main::$TOKEN_ENDPOINT, $parameters);
 	    
+	}
+	
+	public function setAccessToken($token) {
+	    $this->access_token = $token;
+	}
+	
+	/**
+	 * Retrieve profiles attached to their account.
+	 */
+	public function getProfileIDs() {
+	    
+	    if (!$this->access_token)
+		$this->setAccessToken(\Idno\Core\site()->session()->currentUser()->buffer['access_token']);
+	    
+	    if ($result = \Idno\Core\Webservice::get('https://api.bufferapp.com/1/profiles.json', ['access_token' => $this->access_token])) {
+		
+		$profiles = [];
+		
+		$results = json_decode($result['content']);
+		
+		foreach ($results as $result) {
+		    $profiles[] = $result->id;
+		}	
+		
+		return $profiles;
+	    }
+	    
+	    return false;
 	}
 	
     }
