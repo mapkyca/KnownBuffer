@@ -37,13 +37,138 @@
                 }, ['note','article','image']);
 		
 		
+		// Push "notes" to Buffer
+                \Idno\Core\site()->addEventHook('post/note/buffer',function(\Idno\Core\Event $event) {
+                    $object = $event->data()['object'];
+                    if ($this->hasBuffer()) {
+                        if ($bufferAPI = $this->connect()) {
+                            $bufferAPI->setAccessToken(\Idno\Core\site()->session()->currentUser()->buffer['access_token']);
+                            $message = strip_tags($object->getDescription());
+			    
+                            if (!empty($message) && substr($message,0,1) != '@') {
+                                
+                                try {
+				    
+				    $result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, [
+					'text' => $message,
+					'profile_ids' => \Idno\Core\site()->session()->currentUser()->buffer['profile_ids'],
+				    ]);
+				    
+				    if ($result['response'] < 400) {
+					
+					// Success
+					$link = 'https://bufferapp.com/app'; // We don't have a full posse link here, so we have to link to buffer account
 
+					$object->setPosseLink('buffer', $link);
+					$object->save();
+					
+				    }
+				    else
+				    {
+					\Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
+					
+					throw new \Exception("Error code {$result['response']}");
+				    }
+				    
+                                } catch (\Exception $e) {
+                                    \Idno\Core\site()->session()->addMessage('There was a problem posting to Buffer: ' . $e->getMessage());
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Push "articles" to Buffer
+                \Idno\Core\site()->addEventHook('post/article/buffer',function(\Idno\Core\Event $event) {
+                    $object = $event->data()['object'];
+                    if ($this->hasBuffer()) {
+                        if ($bufferAPI = $this->connect()) {
+                            $bufferAPI->setAccessToken(\Idno\Core\site()->session()->currentUser()->buffer['access_token']);
+                            
+			    try {
+				$status     = $object->getTitle();
+				if (strlen($status) > 110) { // Trim status down if required
+				    $status = substr($status, 0, 106) . ' ...';
+				}
+				$status .= ' ' . $object->getURL();
+
+				$result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, [
+				    'text' => $status,
+				    'profile_ids' => \Idno\Core\site()->session()->currentUser()->buffer['profile_ids'],
+				]);
+
+				if ($result['response'] < 400) {
+
+				    // Success
+				    $link = 'https://bufferapp.com/app'; // We don't have a full posse link here, so we have to link to buffer account
+
+				    $object->setPosseLink('buffer', $link);
+				    $object->save();
+
+				}
+				else
+				{
+				    \Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
+
+				    throw new \Exception("Error code {$result['response']}");
+				}
+
+			    } catch (\Exception $e) {
+				\Idno\Core\site()->session()->addMessage('There was a problem posting to Buffer: ' . $e->getMessage());
+			    }
+                        }
+                    }
+                });
+
+                // Push "images" to Buffer
+                \Idno\Core\site()->addEventHook('post/image/buffer',function(\Idno\Core\Event $event) {
+                    $object = $event->data()['object'];
+                    if ($attachments = $object->getAttachments()) {
+                        foreach($attachments as $attachment) {
+                            if ($this->hasBuffer()) {
+                                if ($bufferAPI = $this->connect()) {
+				    $bufferAPI->setAccessToken(\Idno\Core\site()->session()->currentUser()->buffer['access_token']);
+
+				    
+				     try {
+					$result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, [
+					    'text' => $object->getTitle(),
+					    'profile_ids' => \Idno\Core\site()->session()->currentUser()->buffer['profile_ids'],
+					    'media' => ['photo' => $attachment['url'], 'thumbnail' => $attachment['url'], 'link' => $object->getUrl(), 'title' => $object->getTitle(), 'description' => $object->getDescription()]
+					]);
+
+					if ($result['response'] < 400) {
+
+					    // Success
+					    $link = 'https://bufferapp.com/app'; // We don't have a full posse link here, so we have to link to buffer account
+
+					    $object->setPosseLink('buffer', $link);
+					    $object->save();
+
+					}
+					else
+					{
+					    \Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
+
+					    throw new \Exception("Error code {$result['response']}");
+					}
+
+				    } catch (\Exception $e) {
+					\Idno\Core\site()->session()->addMessage('There was a problem posting to Buffer: ' . $e->getMessage());
+				    }
+				    
+				    
+				}
+                            }
+                        }
+                    }
+                }); 
                 
             }
 
             /**
              * Connect to Buffer
-             * @return bool|\Buffer
+             * @return bool|\IdnoPlugins\Buffer\Client
              */
             function connect() {
                 if (!empty(\Idno\Core\site()->config()->buffer)) {
