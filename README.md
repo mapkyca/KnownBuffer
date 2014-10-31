@@ -9,7 +9,7 @@ lets you queue up tweets etc (until native embargo support is added).
 Installation
 ------------
 
-* Drop the Linkedin folder into the IndoPlugins folder of your idno installation.
+* Drop the Buffer folder into the IndoPlugins folder of your idno installation.
 * Log into known and click on Administration.
 * Click "install" on the plugins page
 
