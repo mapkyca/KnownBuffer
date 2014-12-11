@@ -49,10 +49,10 @@
                                 
                                 try {
 				    
-				    $result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, [
+				    $result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, http_build_query([
 					'text' => $message,
 					'profile_ids' => \Idno\Core\site()->session()->currentUser()->buffer['profile_ids'],
-				    ]);
+				    ]));
 				    
 				    if ($result['response'] < 400) {
 					
@@ -65,7 +65,7 @@
 				    }
 				    else
 				    {
-					\Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
+					\Idno\Core\site()->logging->log("Buffer Syndication to " . print_r(\Idno\Core\site()->session()->currentUser()->buffer['profile_ids'], true) . " failed with " . print_r($result, true), LOGLEVEL_ERROR);
 					
 					$content = json_decode($result['content']);
 					if (!empty($content->message))
@@ -96,10 +96,10 @@
 				}
 				$status .= ' ' . $object->getURL();
 
-				$result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, [
+				$result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, http_build_query([
 				    'text' => $status,
 				    'profile_ids' => \Idno\Core\site()->session()->currentUser()->buffer['profile_ids'],
-				]);
+				]));
 
 				if ($result['response'] < 400) {
 
@@ -112,7 +112,7 @@
 				}
 				else
 				{
-				    \Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
+				    \Idno\Core\site()->logging->log("Buffer Syndication to " . print_r(\Idno\Core\site()->session()->currentUser()->buffer['profile_ids'], true) . " failed with " . print_r($result, true), LOGLEVEL_ERROR);
 				    
 				    $content = json_decode($result['content']);
 				    if (!empty($content->message))
@@ -139,11 +139,11 @@
 
 				    
 				     try {
-					$result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, [
+					$result = \Idno\Core\Webservice::post('https://api.bufferapp.com/1/updates/create.json?access_token=' . $bufferAPI->access_token, http_build_query([
 					    'text' => $object->getTitle(),
 					    'profile_ids' => \Idno\Core\site()->session()->currentUser()->buffer['profile_ids'],
 					    'media' => ['photo' => $attachment['url'], 'thumbnail' => $attachment['url'], 'link' => $object->getUrl(), 'title' => $object->getTitle(), 'description' => $object->getDescription()]
-					]);
+					]));
 
 					if ($result['response'] < 400) {
 
@@ -156,7 +156,7 @@
 					}
 					else
 					{
-					    \Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
+					    \Idno\Core\site()->logging->log("Buffer Syndication to " . print_r(\Idno\Core\site()->session()->currentUser()->buffer['profile_ids'], true) . " failed with " . print_r($result, true), LOGLEVEL_ERROR);
 
 					    $content = json_decode($result['content']);
 					    if (!empty($content->message))
