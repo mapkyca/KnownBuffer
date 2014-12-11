@@ -67,11 +67,15 @@
 				    {
 					\Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
 					
+					$content = json_decode($result['content']);
+					if (!empty($content->message))
+					    throw new \Exception($content->message);
+					
 					throw new \Exception("Error code {$result['response']}");
 				    }
 				    
                                 } catch (\Exception $e) {
-                                    \Idno\Core\site()->session()->addMessage('There was a problem posting to Buffer: ' . $e->getMessage());
+                                    \Idno\Core\site()->session()->addErrorMessage('There was a problem posting to Buffer: ' . $e->getMessage());
                                 }
                             }
                         }
@@ -109,12 +113,16 @@
 				else
 				{
 				    \Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
+				    
+				    $content = json_decode($result['content']);
+				    if (!empty($content->message))
+					throw new \Exception($content->message);
 
 				    throw new \Exception("Error code {$result['response']}");
 				}
 
 			    } catch (\Exception $e) {
-				\Idno\Core\site()->session()->addMessage('There was a problem posting to Buffer: ' . $e->getMessage());
+				\Idno\Core\site()->session()->addErrorMessage('There was a problem posting to Buffer: ' . $e->getMessage());
 			    }
                         }
                     }
@@ -150,11 +158,15 @@
 					{
 					    \Idno\Core\site()->logging->log("Buffer Syndication: " . print_r($result, true), LOGLEVEL_ERROR);
 
+					    $content = json_decode($result['content']);
+					    if (!empty($content->message))
+						throw new \Exception($content->message);
+					    
 					    throw new \Exception("Error code {$result['response']}");
 					}
 
 				    } catch (\Exception $e) {
-					\Idno\Core\site()->session()->addMessage('There was a problem posting to Buffer: ' . $e->getMessage());
+					\Idno\Core\site()->session()->addErrorMessage('There was a problem posting to Buffer: ' . $e->getMessage());
 				    }
 				    
 				    
