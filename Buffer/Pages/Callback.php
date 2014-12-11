@@ -29,7 +29,11 @@ namespace IdnoPlugins\Buffer\Pages {
 			    $user->buffer = ['access_token' => $response->access_token];
 			    
 			    // Get profiles
-			    $user->buffer['profile_ids'] = $bufferAPI->getProfileIDs();
+			    $profiles = $bufferAPI->getProfileIDs();
+			    if (empty($profiles)) 
+				throw new \Exception('No profiles were associated with that account.');
+			    
+			    $user->buffer['profile_ids'] = $profiles;
 
 			    $user->save();
 			    \Idno\Core\site()->session()->addMessage('Your Buffer account was connected.');
