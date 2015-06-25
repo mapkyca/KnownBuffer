@@ -1,13 +1,13 @@
 <div class="row">
 
-    <div class="span10 offset1">
+    <div class="col-md-10 col-md-offset-1">
         <h3>Buffer</h3>
         <?=$this->draw('account/menu')?>
     </div>
 
 </div>
 <div class="row">
-    <div class="span10 offset1">
+    <div class="col-md-10 col-md-offset-1">
         <form action="/account/buffer/" class="form-horizontal" method="post">
             <?php
                 if (empty(\Idno\Core\site()->session()->currentUser()->buffer)) {
