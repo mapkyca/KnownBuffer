@@ -1,13 +1,13 @@
 <div class="row">
 
-    <div class="span10 offset1">
+    <div class="col-md-10 col-md-offset-1">
         <h1>Buffer</h1>
         <?=$this->draw('admin/menu')?>
     </div>
 
 </div>
 <div class="row">
-    <div class="span10 offset1">
+    <div class="col-md-10 col-md-offset-1">
         <form action="/admin/buffer/" class="form-horizontal" method="post">
             <div class="control-group">
                 <div class="controls">
@@ -25,13 +25,13 @@
             <div class="control-group">
                 <label class="control-label" for="name">Client ID</label>
                 <div class="controls">
-                    <input type="text" id="name" placeholder="App Key" class="span4" name="appId" value="<?=htmlspecialchars(\Idno\Core\site()->config()->buffer['appId'])?>" >
+                    <input type="text" id="name" placeholder="App Key" class="col-md-4" name="appId" value="<?=htmlspecialchars(\Idno\Core\site()->config()->buffer['appId'])?>" >
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="name">Client Secret</label>
                 <div class="controls">
-                    <input type="text" id="name" placeholder="Secret Key" class="span4" name="secret" value="<?=htmlspecialchars(\Idno\Core\site()->config()->buffer['secret'])?>" >
+                    <input type="text" id="name" placeholder="Secret Key" class="col-md-4" name="secret" value="<?=htmlspecialchars(\Idno\Core\site()->config()->buffer['secret'])?>" >
                 </div>
             </div>
             <div class="control-group">
