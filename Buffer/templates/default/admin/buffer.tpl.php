@@ -25,13 +25,13 @@
             <div class="control-group">
                 <label class="control-label" for="name">Client ID</label>
                 <div class="controls">
-                    <input type="text" id="name" placeholder="App Key" class="col-md-4" name="appId" value="<?=htmlspecialchars(\Idno\Core\site()->config()->buffer['appId'])?>" >
+                    <input type="text" id="name" placeholder="App Key" name="appId" value="<?=htmlspecialchars(\Idno\Core\site()->config()->buffer['appId'])?>" >
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="name">Client Secret</label>
                 <div class="controls">
-                    <input type="text" id="name" placeholder="Secret Key" class="col-md-4" name="secret" value="<?=htmlspecialchars(\Idno\Core\site()->config()->buffer['secret'])?>" >
+                    <input type="text" id="name" placeholder="Secret Key" name="secret" value="<?=htmlspecialchars(\Idno\Core\site()->config()->buffer['secret'])?>" >
                 </div>
             </div>
             <div class="control-group">
